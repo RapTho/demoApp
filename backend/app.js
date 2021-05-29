@@ -20,7 +20,7 @@ app.use(cors());
 app.use(helmet());
 
 // Select DEV, TEST or PROD environment
-dotenv.config(selectEnvironment());
+selectEnvironment();
 console.log(process.env.TEST);
 
 // Router base APIs
