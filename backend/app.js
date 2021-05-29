@@ -3,7 +3,6 @@
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
-const dotenv = require("dotenv");
 
 const selectEnvironment = require("./utils/selectEnvironment");
 
@@ -21,10 +20,12 @@ app.use(helmet());
 
 // Select DEV, TEST or PROD environment
 selectEnvironment();
-console.log(process.env.TEST);
+
+// Connect to MongoDB
+require("./db/mongoose");
 
 // Router base APIs
-// app.use("/api/user", require("./routes/api/user"));
+app.use("/api/user", require("./routes/api/user"));
 // app.use("/api/login", require("./routes/api/login"));
 // app.use("/api/logout", require("./routes/api/logout"));
 // app.use("/api/auth", require("./routes/api/logout"));
