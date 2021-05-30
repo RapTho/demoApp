@@ -26,6 +26,7 @@ require("./db/mongoose");
 
 // Router base APIs
 app.use("/api/user", require("./routes/api/user"));
+app.use("/api/thing", require("./routes/api/thing"));
 // app.use("/api/login", require("./routes/api/login"));
 // app.use("/api/logout", require("./routes/api/logout"));
 // app.use("/api/auth", require("./routes/api/logout"));

@@ -10,19 +10,44 @@ const UserSchema = new Schema({
     required: true,
     trim: true,
     maxLength: 30,
+    unique: true,
   },
   email: {
     type: String,
     required: true,
     trim: true,
+    lowercase: true,
     unique: true,
-    validate(value) {
+    validate: (value) => {
       if (!validator.isEmail(value)) throw new Error("Email address invalid!");
     },
   },
   password: {
     type: String,
     required: true,
+    minLength: 8,
+    validate: (value) => {
+      let rules = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])/;
+      if (!value.match(rules))
+        throw new Error(
+          "Password too weak. Use at least 8 characters including: lower-case, upper-case and special characters and a digit"
+        );
+    },
+    transform: (doc) => {
+      // Remove password whenever toJSON() or toObject() is called on the document.
+      delete doc.password;
+    },
+  },
+  location: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      required: true,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
   },
 });
 

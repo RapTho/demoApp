@@ -1,32 +1,27 @@
 const express = require("express");
 const router = express.Router();
 
-const User = require("../../db/models/User");
+const Thing = require("../../db/models/Thing");
 const checkParemeterValidity = require("../../utils/checkParameterValidity");
 
-router.post("/createUser", async (req, res) => {
-  const allowedParams = ["username", "password", "email", "location"];
+router.post("/createThing", async (req, res) => {
+  const allowedParams = ["name", "description", "owner", "location"];
   if (!checkParemeterValidity(req, allowedParams)) {
     return res.status(400).json({ error: "Invalide parameters" });
   }
 
-  let newUser = new User(req.body);
-  newUser
+  let newThing = new Thing(req.body);
+  newThing
     .save()
-    .then(() => res.status(201).json(newUser))
+    .then(() => res.status(201).json(newThing))
     .catch((err) => {
       res.status(400).json({ error: err.message });
     });
 });
 
-// router.patch("/me", auth, async (req, res) => {
-//   const allowedUpdates = [
-//     "username",
-//     "password",
-//     "email",
-//     "location",
-//   ];
-//   if (!isValidOperation) {
+// router.patch("/updateThing", auth, async (req, res) => {
+//   const allowedParams = ["name", "description", "owner", "location"];
+//   if (!checkParemeterValidity(req, allowedParams)) {
 //     return res.status(400).json({ error: "Invalide update parameters" });
 //   }
 // });
