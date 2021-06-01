@@ -38,6 +38,12 @@ const UserSchema = new Schema({
       delete doc.password;
     },
   },
+  token: {
+    type: String,
+    transform: (doc) => {
+      delete doc.token;
+    },
+  },
   location: {
     type: {
       type: String,

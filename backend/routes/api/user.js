@@ -10,14 +10,13 @@ router.post("/createUser", async (req, res) => {
   if (!checkParemeterValidity(req, allowedParams)) {
     return res.status(400).json({ error: "Invalide parameters" });
   }
-
-  let newUser = new User(req.body);
-  newUser
-    .save()
-    .then(() => res.status(201).json(newUser))
-    .catch((err) => {
-      res.status(400).json({ error: err.message });
-    });
+  try {
+    let newUser = new User(req.body);
+    const savedUser = await newUser.save();
+    res.status(201).send(savedUser);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 router.patch(

@@ -20,15 +20,19 @@ router.post("/", async (req, res) => {
   let user = {};
   try {
     user = await User.findOne({ email: req.body.email }).lean();
-
     if (user) {
+      delete user.token;
+      delete user.password;
       const newJWT = generateJWT(user);
-      User.findOneAndUpdate({ _id: user._id }, { token: newJWT.token });
+      user = await User.updateOne(
+        { _id: user._id },
+        { token: newJWT.token }
+      ).lean();
       res
         .status(200)
         .json({ token: newJWT.token, expirationTime: newJWT.tokenExpiration });
     } else {
-      res.status(400).json({ error: "User not found" });
+      res.status(401).json({ error: "Invalid e-mail or password" });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
