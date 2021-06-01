@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
+const passport = require("../../auth/passport-jwt");
 const User = require("../../db/models/User");
 const checkParemeterValidity = require("../../utils/checkParameterValidity");
 
@@ -19,16 +20,15 @@ router.post("/createUser", async (req, res) => {
     });
 });
 
-// router.patch("/me", auth, async (req, res) => {
-//   const allowedUpdates = [
-//     "username",
-//     "password",
-//     "email",
-//     "location",
-//   ];
-//   if (!isValidOperation) {
-//     return res.status(400).json({ error: "Invalide update parameters" });
-//   }
-// });
+router.patch(
+  "/me",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    const allowedUpdates = ["username", "password", "email", "location"];
+    if (!checkParemeterValidity(req, allowedUpdates)) {
+      return res.status(400).json({ error: "Invalide update parameters" });
+    }
+  }
+);
 
 module.exports = router;
