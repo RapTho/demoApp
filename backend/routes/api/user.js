@@ -5,6 +5,12 @@ const passport = require("../../auth/passport-jwt");
 const User = require("../../db/models/User");
 const checkParemeterValidity = require("../../utils/checkParameterValidity");
 
+/*
+Fix error upon first creation: 
+{
+    "error": "Cannot convert undefined or null to object"
+}
+*/
 router.post("/createUser", async (req, res) => {
   const allowedParams = ["username", "password", "email", "location"];
   if (!checkParemeterValidity(req, allowedParams)) {
@@ -20,7 +26,7 @@ router.post("/createUser", async (req, res) => {
 });
 
 router.patch(
-  "/me",
+  "/updateUser",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     const allowedUpdates = ["username", "password", "email", "location"];

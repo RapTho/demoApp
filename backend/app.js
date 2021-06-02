@@ -3,7 +3,7 @@
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
-const passport = require("passport");
+const passport = require("./auth/passport");
 
 const selectEnvironment = require("./utils/selectEnvironment");
 

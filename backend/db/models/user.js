@@ -57,29 +57,28 @@ const UserSchema = new Schema({
   },
 });
 
-UserSchema.pre("save", function (next) {
-  let user = this;
-
+UserSchema.pre("save", async function save(next) {
   // Only run this pre "save" during user creation.
-  if (!user.isModified("password")) return next();
+  if (!this.isModified("password")) return next();
 
-  bcrypt.genSalt(10, (err, salt) => {
-    if (err) return next(err);
-
-    bcrypt.hash(user.password, salt, (err, hash) => {
-      if (err) return next(err);
-
-      user.password = hash;
-      next();
-    });
-  });
+  try {
+    const salt = await bcrypt.genSalt(12);
+    this.password = await bcrypt.hash(this.password, salt);
+    return next();
+  } catch (err) {
+    return next(err);
+  }
 });
 
-UserSchema.methods.comparePassword = function (candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-    if (err) return cb(err);
-    cb(null, isMatch);
-  });
+UserSchema.methods.validatePassword = async function validatePassword(pwd) {
+  return bcrypt.compare(pwd, this.password);
 };
+
+// UserSchema.methods.comparePassword = function (candidatePassword) {
+//   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+//     if (err) return false;
+//     return isMatch;
+//   });
+// };
 
 module.exports = mongoose.model("User", UserSchema);
