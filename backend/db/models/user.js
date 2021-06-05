@@ -40,7 +40,7 @@ const UserSchema = new Schema({
   },
   token: {
     type: String,
-    transform: (doc) => {
+    transform: (doc = {}) => {
       delete doc.token;
     },
   },
@@ -58,7 +58,6 @@ const UserSchema = new Schema({
 });
 
 UserSchema.pre("save", async function save(next) {
-  // Only run this pre "save" during user creation.
   if (!this.isModified("password")) return next();
 
   try {
@@ -70,15 +69,20 @@ UserSchema.pre("save", async function save(next) {
   }
 });
 
+UserSchema.pre("updateOne", async function updateOne(next) {
+  if (this._update.token) return next();
+
+  try {
+    const salt = await bcrypt.genSalt(12);
+    this._update.password = await bcrypt.hash(this._update.password, salt);
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
 UserSchema.methods.validatePassword = async function validatePassword(pwd) {
   return bcrypt.compare(pwd, this.password);
 };
-
-// UserSchema.methods.comparePassword = function (candidatePassword) {
-//   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-//     if (err) return false;
-//     return isMatch;
-//   });
-// };
 
 module.exports = mongoose.model("User", UserSchema);

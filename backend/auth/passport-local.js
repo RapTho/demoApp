@@ -3,7 +3,7 @@ const LocalStrategy = require("passport-local").Strategy;
 
 const User = require("../db/models/User");
 
-const errorMsg = "Incorrect username or password.";
+const errorMsg = "Invalid e-mail or password.";
 
 passport.use(
   new LocalStrategy(

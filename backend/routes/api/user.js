@@ -5,12 +5,6 @@ const passport = require("../../auth/passport-jwt");
 const User = require("../../db/models/User");
 const checkParemeterValidity = require("../../utils/checkParameterValidity");
 
-/*
-Fix error upon first creation: 
-{
-    "error": "Cannot convert undefined or null to object"
-}
-*/
 router.post("/createUser", async (req, res) => {
   const allowedParams = ["username", "password", "email", "location"];
   if (!checkParemeterValidity(req, allowedParams)) {
@@ -18,8 +12,9 @@ router.post("/createUser", async (req, res) => {
   }
   try {
     let newUser = new User(req.body);
-    const savedUser = await newUser.save();
-    res.status(201).send(savedUser);
+    await newUser.save();
+    console.log(newUser.toJSON());
+    res.status(201).send(newUser);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -32,6 +27,16 @@ router.patch(
     const allowedUpdates = ["username", "password", "email", "location"];
     if (!checkParemeterValidity(req, allowedUpdates)) {
       return res.status(400).json({ error: "Invalide update parameters" });
+    }
+
+    try {
+      const updatedUser = await User.updateOne(
+        { _id: req.user._id },
+        req.body
+      ).exec();
+      res.status(200).json(updatedUser);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
     }
   }
 );
