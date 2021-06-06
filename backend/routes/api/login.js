@@ -1,10 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const User = require("../../db/collections/User");
-
 const passport = require("../../auth/passport-local");
-// const User = require("../../db/models/User");
+const User = require("../../db/models/User");
 const generateJWT = require("../../utils/generateJWT");
 const removeUserCreds = require("../../utils/removeUserCreds");
 

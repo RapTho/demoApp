@@ -27,7 +27,7 @@ router.post("/createUser", async (req, res) => {
   try {
     let newUser = new User(req.body);
     await newUser.save();
-    res.status(201).send(removeUserCreds(savedUser));
+    res.status(201).send(removeUserCreds(newUser));
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
