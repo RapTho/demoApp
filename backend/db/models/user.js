@@ -33,16 +33,17 @@ const UserSchema = new Schema({
           "Password too weak. Use at least 8 characters including: lower-case, upper-case and special characters and a digit"
         );
     },
-    transform: (doc) => {
-      // Remove password whenever toJSON() or toObject() is called on the document.
-      delete doc.password;
-    },
+    // transform: (doc) => {
+    //   // Remove password whenever toJSON() or toObject() is called on the document.
+    //   delete doc.password;
+    // },
   },
   token: {
     type: String,
-    transform: (doc = {}) => {
-      delete doc.token;
-    },
+    // select: false,
+    // transform: (doc = {}) => {
+    //   delete doc.token;
+    // },
   },
   location: {
     type: {
