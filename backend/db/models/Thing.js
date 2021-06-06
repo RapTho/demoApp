@@ -13,8 +13,9 @@ const ThingSchema = new Schema({
     type: String,
     maxLength: 500,
   },
-  owner: {
+  ownerId: {
     type: [String],
+    required: true,
     validate: (value) => {
       mongoose.isValidObjectId(value);
     },
