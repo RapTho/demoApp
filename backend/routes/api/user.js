@@ -56,25 +56,30 @@ router.delete(
   "/me",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
+    const session = await User.startSession();
     try {
-      const session = await User.startSession();
       session.startTransaction();
 
       const thingIDs = await Thing.find(
         { ownerId: req.user._id },
-        { _id: 1 }
+        { _id: 1 },
+        { session }
       ).lean();
       const thingIDsFormated = thingIDs.map((thing) => thing._id);
 
-      await Thing.deleteMany({ _id: { $in: thingIDsFormated } }).exec();
-      User.deleteOne({ _id: req.user._id }).exec();
+      await Thing.deleteMany(
+        { _id: { $in: thingIDsFormated } },
+        { session }
+      ).exec();
+      await User.deleteOne({ _id: req.user._id }, { session }).exec();
 
       await session.commitTransaction();
       session.endSession();
 
       res.sendStatus(200);
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(500).json({ error: err.message });
+      session.endSession();
     }
   }
 );
