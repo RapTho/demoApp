@@ -4,6 +4,20 @@ const router = express.Router();
 const passport = require("../../auth/passport-jwt");
 const User = require("../../db/models/User");
 const checkParemeterValidity = require("../../utils/checkParameterValidity");
+const removeUserCreds = require("../../utils/removeUserCreds");
+
+router.get(
+  "/me",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      let user = await User.findById(req.user._id).lean();
+      res.status(200).json(removeUserCreds(user));
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  }
+);
 
 router.post("/createUser", async (req, res) => {
   const allowedParams = ["username", "password", "email", "location"];
@@ -13,15 +27,14 @@ router.post("/createUser", async (req, res) => {
   try {
     let newUser = new User(req.body);
     await newUser.save();
-    console.log(newUser.toJSON());
-    res.status(201).send(newUser);
+    res.status(201).send(removeUserCreds(savedUser));
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
 
 router.patch(
-  "/updateUser",
+  "/me",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     const allowedUpdates = ["username", "password", "email", "location"];
@@ -30,11 +43,8 @@ router.patch(
     }
 
     try {
-      const updatedUser = await User.updateOne(
-        { _id: req.user._id },
-        req.body
-      ).exec();
-      res.status(200).json(updatedUser);
+      await User.updateOne({ _id: req.user._id }, req.body).exec();
+      res.sendStatus(200);
     } catch (err) {
       res.status(400).json({ error: err.message });
     }
