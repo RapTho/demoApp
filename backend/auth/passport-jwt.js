@@ -9,18 +9,20 @@ const options = {
   secretOrKey: process.env.JWT_SECRET,
 };
 
-passport.use(
-  new JwtStrategy(options, (jwtPayload, done) => {
-    User.findOne({ _id: jwtPayload._id }, (err, user) => {
-      if (err) done(err, false);
+const authFunc = async (jwtPayload, done) => {
+  try {
+    const user = await User.findOne({ _id: jwtPayload._id }).lean();
 
-      if (user) {
-        return done(null, user);
-      } else {
-        return done(null, false);
-      }
-    });
-  })
-);
+    if (user) {
+      return done(null, user);
+    } else {
+      return done(null, false);
+    }
+  } catch (err) {
+    done(err, false);
+  }
+};
+
+passport.use(new JwtStrategy(options, authFunc));
 
 module.exports = passport;

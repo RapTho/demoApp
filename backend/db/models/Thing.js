@@ -13,7 +13,7 @@ const ThingSchema = new Schema({
     type: String,
     maxLength: 500,
   },
-  ownerId: {
+  ownerIDs: {
     type: [String],
     required: true,
     validate: (value) => {
