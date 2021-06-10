@@ -6,7 +6,7 @@ const User = require("../../db/models/User");
 const generateJWT = require("../../utils/generateJWT");
 const removeUserCreds = require("../../utils/removeUserCreds");
 
-router.post("/", passport.authenticate("local"), async (req, res) => {
+router.post("/login", passport.authenticate("local"), async (req, res) => {
   let user = {};
   try {
     user = await User.findOne({ email: req.body.email }).lean();
@@ -27,5 +27,22 @@ router.post("/", passport.authenticate("local"), async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+router.get(
+  "/logout",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      await User.updateOne(
+        { _id: req.user._id.toString() },
+        { token: "" }
+      ).exec();
+
+      res.sendStatus(200);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+);
 
 module.exports = router;

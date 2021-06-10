@@ -179,7 +179,7 @@ router.get(
 );
 
 router.get(
-  "/getThingByText",
+  "/getThingsByText",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     if (!req.query.text || !isNaN(req.query.text)) {

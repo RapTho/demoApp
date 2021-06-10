@@ -63,7 +63,7 @@ UserSchema.pre("save", async function save(next) {
 });
 
 UserSchema.pre("updateOne", async function updateOne(next) {
-  if (this._update.token) return next();
+  if (this._update.token || this._update.token === "") return next();
 
   try {
     const salt = await bcrypt.genSalt(12);
