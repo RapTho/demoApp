@@ -8,6 +8,8 @@ RUN npm install
 
 EXPOSE 5000
 
+ENV NODE_ENV prod
+
 ENTRYPOINT [ "node" ]
 
 CMD [ "app.js" ]
