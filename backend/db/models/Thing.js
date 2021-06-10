@@ -33,4 +33,7 @@ const ThingSchema = new Schema({
   },
 });
 
+ThingSchema.index({ location: "2dsphere" });
+ThingSchema.index({ name: "text", description: "text" });
+
 module.exports = mongoose.model("Thing", ThingSchema);

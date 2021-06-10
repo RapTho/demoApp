@@ -7,8 +7,10 @@ const checkParemeterValidity = require("../../utils/checkParameterValidity");
 
 const errorMsg = [
   "Permission denied! You are not an owner of this thing.",
-  "No thing found. Please provide a valid thingId.",
-  "Invalid input. Please provide a number as query parameter.",
+  "No thing found. Please provide a valid input.",
+  "Invalid input!",
+  "You didn't create any things yet.",
+  "No things found",
 ];
 
 router.post(
@@ -107,6 +109,94 @@ router.get(
         .limit(parseInt(req.query.number, 10))
         .lean();
       res.json(result);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+);
+
+router.get(
+  "/getMyThings",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const result = await Thing.find({
+        ownerIDs: req.user._id.toString(),
+      }).lean();
+
+      if (result.length == 0) {
+        res.status(200).json({ error: errorMsg[3] });
+      } else {
+        res.json(result);
+      }
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+);
+
+router.get(
+  "/getThingsNearLocation",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    if (
+      !req.query.lat ||
+      !req.query.long ||
+      !req.query.radius ||
+      isNaN(req.query.lat) ||
+      isNaN(req.query.long) ||
+      isNaN(req.query.radius)
+    ) {
+      res.status(400).json({ error: errorMsg[2] });
+      return;
+    }
+
+    try {
+      const result = await Thing.find({
+        location: {
+          $near: {
+            $geometry: {
+              type: "Point",
+              coordinates: [
+                parseFloat(req.query.long),
+                parseFloat(req.query.lat),
+              ],
+            },
+            $maxDistance: parseInt(req.query.radius),
+          },
+        },
+      }).lean();
+
+      if (result.length == 0) {
+        res.status(200).json({ error: errorMsg[4] });
+      } else {
+        res.json(result);
+      }
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+);
+
+router.get(
+  "/getThingByText",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    if (!req.query.text || !isNaN(req.query.text)) {
+      res.status(400).json({ error: errorMsg[2] });
+      return;
+    }
+
+    try {
+      const result = await Thing.find({
+        $text: { $search: req.query.text },
+      }).lean();
+
+      if (result.length == 0) {
+        res.status(200).json({ error: errorMsg[4] });
+      } else {
+        res.json(result);
+      }
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
