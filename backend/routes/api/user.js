@@ -59,9 +59,8 @@ router.delete(
     const session = await User.startSession();
     try {
       session.startTransaction();
-
       const thingIDs = await Thing.find(
-        { ownerId: req.user._id },
+        { ownerIDs: req.user._id.toString() },
         { _id: 1 },
         { session }
       ).lean();
