@@ -13,7 +13,7 @@ const authFunc = async (jwtPayload, done) => {
   try {
     const user = await User.findOne({ _id: jwtPayload._id }).lean();
 
-    if (user) {
+    if (user && user.token !== "") {
       return done(null, user);
     } else {
       return done(null, false);

@@ -78,9 +78,27 @@ describe("Test user lifecycle APIs", () => {
       .set("Authorization", `Bearer ${jwt}`)
       .send();
     expect(response.statusCode).toBe(200);
+
+    // Test if JWT was removed
+    const r = await request(app)
+      .get("/api/user/me")
+      .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${jwt}`)
+      .send();
+    expect(r.statusCode).toBe(401);
   });
 
   it("DELETE /api/user/me", async () => {
+    // First generate new JWT, since logout API test removed it from user
+    const tokenResponse = await request(app)
+      .post("/api/auth/login")
+      .set("Accept", "application/json")
+      .send({
+        email: "raphael@test.ch",
+        password: "superSecure9$",
+      });
+    jwt = tokenResponse.body.token;
+
     const response = await request(app)
       .delete("/api/user/me")
       .set("Accept", "application/json")
