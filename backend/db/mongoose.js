@@ -1,17 +1,26 @@
 const mongoose = require("mongoose");
 const chalk = require("chalk");
 
-const connect = () => {
-  mongoose
+let db;
+
+const connect = async () => {
+  await mongoose
     .connect(process.env.MONGODBURL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
     })
-    .then(() => console.log("MongoDB connected!"))
+    .then((database) => {
+      db = database;
+      console.log("MongoDB connected!");
+    })
     .catch((err) => {
       throw new Error(chalk.bold.red(`MongoDB error: ${err.message}`));
     });
 };
 
-module.exports = { connect };
+const disconnect = async () => {
+  await mongoose.disconnect();
+};
+
+module.exports = { connect, disconnect };

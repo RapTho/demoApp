@@ -30,5 +30,13 @@ const server = app.listen(PORT, () =>
   console.log(`Server started on port ${PORT}`)
 );
 
+// Graceful shutdown
+process.on("SIGTERM", () => {
+  console.info("SIGTERM signal received.");
+  console.log("Closing app server and connection to MongoDB.");
+  server.close();
+  mongoose.disconnect();
+});
+
 // For testing with jest
 module.exports = server;
