@@ -71,6 +71,15 @@ describe("Test user lifecycle APIs", () => {
     expect(r.body.username).toBe("Raphi");
   });
 
+  it("GET /api/auth/logout", async () => {
+    const response = await request(app)
+      .get("/api/auth/logout")
+      .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${jwt}`)
+      .send();
+    expect(response.statusCode).toBe(200);
+  });
+
   it("DELETE /api/user/me", async () => {
     const response = await request(app)
       .delete("/api/user/me")
