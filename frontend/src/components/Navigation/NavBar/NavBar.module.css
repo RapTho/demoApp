@@ -5,7 +5,7 @@
   left: 0;
   top: 0;
   z-index: 90;
-  background-color: #5b37b7;
+  background-color: #393b58;
   box-sizing: border-box;
   align-items: center;
   display: inline-block;
@@ -15,7 +15,7 @@
   height: 80%;
 }
 
-/* Temporary till logo is there */
+/* Remove this once you have a proper logo */
 .Logo h5 {
   color: white;
   margin: auto;

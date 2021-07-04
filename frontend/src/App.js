@@ -2,6 +2,8 @@ import React, { useEffect, Suspense } from "react";
 import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+
 import Layout from "./hoc/Layout/Layout";
 import Spinner from "./components/UI/Spinner/Spinner";
 import Logout from "./containers/Auth/Logout/Logout";

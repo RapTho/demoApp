@@ -6,14 +6,10 @@ import * as actionTypes from "./actionTypes";
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const getUserData = (token) => {
-  let userId = jwtDecode(token).userId;
   let username = jwtDecode(token).username;
-  let location = jwtDecode(token).pin.location;
 
   return {
-    userId,
     username,
-    location,
   };
 };
 
@@ -23,13 +19,11 @@ const authStarted = () => {
   };
 };
 
-const authSucceeded = (token, userId, username, location) => {
+const authSucceeded = (token, username) => {
   return {
     type: actionTypes.AUTH_SUCCEEDED,
     token,
-    userId,
     username,
-    location,
   };
 };
 
@@ -68,7 +62,6 @@ export const auth = (formData, method, staySignedIn) => {
     if (method === "signup") {
       url = BACKEND_URL + "/api/user/createUser";
       authData.username = formData.username;
-      authData.location = formData.location;
     }
 
     axios
@@ -80,7 +73,7 @@ export const auth = (formData, method, staySignedIn) => {
             dispatch(authFailed(response.data.message));
             return;
           }
-          expirationDate = new Date(response.data.aT_expiration * 1000);
+          expirationDate = new Date(response.data.expirationTime * 1000);
         }
 
         if (staySignedIn) {
@@ -88,14 +81,7 @@ export const auth = (formData, method, staySignedIn) => {
           localStorage.setItem("expiration", expirationDate);
         }
         let userData = getUserData(response.data.token);
-        dispatch(
-          authSucceeded(
-            response.data.token,
-            userData.userId,
-            userData.username,
-            userData.location
-          )
-        );
+        dispatch(authSucceeded(response.data.token, userData.username));
       })
       .catch((error) => {
         dispatch(authFailed(error));
@@ -117,14 +103,7 @@ export const authCheckState = () => {
           checkTokenExpiration(expirationDate.getTime() - new Date().getTime())
         );
         let userData = getUserData(token);
-        dispatch(
-          authSucceeded(
-            token,
-            userData.userId,
-            userData.username,
-            userData.location
-          )
-        );
+        dispatch(authSucceeded(token, userData.username));
       }
     }
   };

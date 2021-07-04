@@ -56,7 +56,7 @@ const SignIn = () => {
       email: event.target[0].value,
       password: event.target[2].value,
     };
-    dispatch(actions.auth(formData, "signin", event.target[4].checked, false));
+    dispatch(actions.auth(formData, "signin", event.target[4].checked));
   };
 
   let content = (
