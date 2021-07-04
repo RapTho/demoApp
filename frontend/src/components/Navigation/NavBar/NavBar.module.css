@@ -1,0 +1,33 @@
+.NavBar {
+  width: 100%;
+  height: 52px;
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 90;
+  background-color: #5b37b7;
+  box-sizing: border-box;
+  align-items: center;
+  display: inline-block;
+}
+
+.Logo {
+  height: 80%;
+}
+
+/* Temporary till logo is there */
+.Logo h5 {
+  color: white;
+  margin: auto;
+}
+
+@media (max-width: 599px) {
+  .DesktopOnly {
+    display: none !important;
+  }
+  .Logo {
+    display: flex;
+    align-items: center;
+    float: left;
+  }
+}

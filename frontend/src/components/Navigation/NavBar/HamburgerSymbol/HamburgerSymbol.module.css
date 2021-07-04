@@ -1,0 +1,29 @@
+.Hamburger {
+  position: relative;
+}
+
+.Bar {
+  position: absolute;
+  right: 0px;
+  height: 5px;
+  width: 50px;
+  background: #fff;
+  border-radius: 2px;
+  display: block;
+}
+
+.Bar:nth-child(1) {
+  top: 0px;
+}
+.Bar:nth-child(2) {
+  top: 10px;
+}
+.Bar:nth-child(3) {
+  top: 20px;
+}
+
+@media (min-width: 600px) {
+  .Hamburger {
+    display: none;
+  }
+}
