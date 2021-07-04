@@ -30,6 +30,9 @@ router.post("/createUser", async (req, res) => {
     await newUser.save();
     res.status(201).send(removeUserCreds(newUser));
   } catch (err) {
+    if (err.message.includes("E11000")) {
+      res.status(409).json({ error: "Username and/or e-mail already taken!" });
+    }
     res.status(400).json({ error: err.message });
   }
 });
