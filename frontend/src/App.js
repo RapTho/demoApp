@@ -40,7 +40,6 @@ const App = (props) => {
     routes = (
       <Switch>
         <Route path="/logout" component={Logout} />
-        <Route path="/signin" component={SignIn} />
         {/* <Route path="/" exact component={Home} /> */}
         <Redirect to="/" />
       </Switch>

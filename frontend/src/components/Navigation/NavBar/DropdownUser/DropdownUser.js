@@ -10,7 +10,7 @@ const DropdownUser = (props) => {
   return (
     <div className={classes.Dropdown}>
       <button className={classes.DropdownButton}>
-        Hi, {props.name} <FontAwesomeIcon icon={faSortDown} color="white" />
+        Hi, {props.username} <FontAwesomeIcon icon={faSortDown} color="white" />
       </button>
       <div className={classes.DropdownContent}>
         <NavLink to="/myAds">My Things</NavLink>

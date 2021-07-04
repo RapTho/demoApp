@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect, NavLink } from "react-router-dom";
 
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -13,6 +13,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
 import * as actions from "../../../store/actions/index";
+import Spinner from "../../../components/UI/Spinner/Spinner";
+import Modal from "../../../components/UI/Modal/ModalSignUp";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -39,20 +41,21 @@ const SignUp = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
+  const loading = useSelector((state) => state.user.loading);
+  const error = useSelector((state) => state.user.error);
+  const succeeded = useSelector((state) => state.user.succeeded);
+
   const onSubmitHandler = (event) => {
     event.preventDefault();
     let formData = {
-      name: event.target[0].value,
-      address: event.target[2].value,
-      postcode: event.target[4].value,
-      city: event.target[6].value,
-      email: event.target[8].value,
-      password: event.target[10].value,
+      username: event.target[0].value,
+      email: event.target[2].value,
+      password: event.target[4].value,
     };
-    dispatch(actions.auth(formData, "signup", false, event.target[12].checked));
+    dispatch(actions.createUser(formData));
   };
 
-  return (
+  let content = (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
@@ -119,6 +122,34 @@ const SignUp = () => {
         </form>
       </div>
     </Container>
+  );
+
+  if (loading) content = <Spinner />;
+
+  let authRedirect = null;
+  if (succeeded) {
+    authRedirect = <Redirect to="/" />;
+    setTimeout(() => {
+      dispatch(actions.clearSuccessMessageUser());
+    }, 1000);
+  }
+
+  let errorMsg = null;
+  if (error)
+    errorMsg = (
+      <Modal>
+        {error.message.includes("code 409")
+          ? "Username or e-mail address already exists"
+          : error.message}
+      </Modal>
+    );
+
+  return (
+    <>
+      {authRedirect}
+      {errorMsg}
+      {content}
+    </>
   );
 };
 

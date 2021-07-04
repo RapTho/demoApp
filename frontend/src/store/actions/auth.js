@@ -50,7 +50,7 @@ const checkTokenExpiration = (expirationTime) => {
   };
 };
 
-export const auth = (formData, method, staySignedIn) => {
+export const auth = (formData, staySignedIn) => {
   return (dispatch) => {
     dispatch(authStarted());
 
@@ -59,22 +59,16 @@ export const auth = (formData, method, staySignedIn) => {
       password: formData.password,
     };
     let url = BACKEND_URL + "/api/auth/login";
-    if (method === "signup") {
-      url = BACKEND_URL + "/api/user/createUser";
-      authData.username = formData.username;
-    }
 
     axios
       .post(url, authData)
       .then((response) => {
         let expirationDate = null;
-        if (method === "signin") {
-          if (response.data.success === false) {
-            dispatch(authFailed(response.data.message));
-            return;
-          }
-          expirationDate = new Date(response.data.expirationTime * 1000);
+        if (response.data.success === false) {
+          dispatch(authFailed(response.data.message));
+          return;
         }
+        expirationDate = new Date(response.data.expirationTime * 1000);
 
         if (staySignedIn) {
           localStorage.setItem("token", response.data.token);

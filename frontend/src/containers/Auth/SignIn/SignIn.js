@@ -17,7 +17,7 @@ import Container from "@material-ui/core/Container";
 
 import * as actions from "../../../store/actions/index";
 import Spinner from "../../../components/UI/Spinner/Spinner";
-import Modal from "../../../components/UI/Modal/Modal";
+import Modal from "../../../components/UI/Modal/ModalSignIn";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -56,7 +56,7 @@ const SignIn = () => {
       email: event.target[0].value,
       password: event.target[2].value,
     };
-    dispatch(actions.auth(formData, "signin", event.target[4].checked));
+    dispatch(actions.auth(formData, event.target[4].checked));
   };
 
   let content = (

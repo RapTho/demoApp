@@ -6,9 +6,11 @@ import thunk from "redux-thunk";
 
 import App from "./App";
 import authReducer from "./store/reducers/auth";
+import userReducer from "./store/reducers/user";
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  user: userReducer,
 });
 
 // Redux devtools requirement

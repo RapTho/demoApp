@@ -12,7 +12,7 @@ import NavicationItems from "../NavigationItems/NavigationItems";
 import DropdownUser from "./DropdownUser/DropdownUser";
 
 const NavBar = (props) => {
-  const name = useSelector((state) => state.auth.name);
+  const username = useSelector((state) => state.auth.username);
 
   return (
     <header className={classes.NavBar}>
@@ -30,7 +30,7 @@ const NavBar = (props) => {
             )}
           >
             <NavicationItems isAuthenticated={props.isAuth} />
-            {props.isAuth ? <DropdownUser name={name} /> : null}
+            {props.isAuth ? <DropdownUser username={username} /> : null}
           </Col>
         </Row>
       </Container>
