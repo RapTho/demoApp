@@ -7,7 +7,7 @@ import NavigationItems from "../NavigationItems/NavigationItems";
 import Backdrop from "../../UI/Backdrop/Backdrop";
 
 const Sidedrawer = (props) => {
-  const name = useSelector((state) => state.auth.name);
+  const username = useSelector((state) => state.auth.username);
 
   let attachedClasses = [classes.SideDrawer, classes.Close];
   if (props.show) {
@@ -22,7 +22,7 @@ const Sidedrawer = (props) => {
                     <Logo />
                 </div> */}
         <nav>
-          {props.isAuth ? <h4>Hi, {name}</h4> : null}
+          {props.isAuth ? <h4>Hi, {username}</h4> : null}
           <NavigationItems isAuthenticated={props.isAuth} />
         </nav>
       </div>
