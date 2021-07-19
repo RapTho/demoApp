@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const chalk = require("chalk");
 
-let db;
-
 const connect = async () => {
   await mongoose
     .connect(process.env.MONGODBURL, {
@@ -10,10 +8,7 @@ const connect = async () => {
       useUnifiedTopology: true,
       useCreateIndex: true,
     })
-    .then((database) => {
-      db = database;
-      console.log("MongoDB connected!");
-    })
+    .then(() => console.log("MongoDB connected!"))
     .catch((err) => {
       throw new Error(chalk.bold.red(`MongoDB error: ${err.message}`));
     });
