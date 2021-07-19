@@ -14,6 +14,9 @@ import * as actions from "./store/actions/index";
 const SignUp = React.lazy(() => {
   return import("./containers/Auth/SignUp/SignUp");
 });
+const Profile = React.lazy(() => {
+  return import("./containers/Profile/Profile");
+});
 
 const App = (props) => {
   const dispatch = useDispatch();
@@ -39,6 +42,7 @@ const App = (props) => {
   if (isAuth) {
     routes = (
       <Switch>
+        <Route path="/profile" render={(props) => <Profile {...props} />} />
         <Route path="/logout" component={Logout} />
         {/* <Route path="/" exact component={Home} /> */}
         <Redirect to="/" />

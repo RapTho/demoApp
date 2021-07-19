@@ -10,7 +10,7 @@ const NavigationItems = (props) => {
 
   const smartphoneOnlyLinks = mediaMax600px ? (
     <>
-      <NavigationItem link="/myAds">My Things</NavigationItem>
+      <NavigationItem link="/myThings">My Things</NavigationItem>
       <NavigationItem link="/profile">Profile</NavigationItem>
       <NavigationItem link="/logout">Logout</NavigationItem>
     </>

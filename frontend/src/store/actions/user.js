@@ -4,6 +4,14 @@ import * as actionTypes from "./actionTypes";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
+const generateHeader = (token) => {
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
+
 const userStarted = () => {
   return {
     type: actionTypes.USER_STARTED,
@@ -42,14 +50,14 @@ export const createUser = (formData) => {
   };
 };
 
-export const updateUser = (formData) => {
+export const updateUser = (formData, token) => {
   return (dispatch) => {
     dispatch(userStarted());
 
-    let url = BACKEND_URL + "/api/user/updateUser";
+    let url = BACKEND_URL + "/api/user/me";
 
     axios
-      .post(url, formData)
+      .patch(url, formData, generateHeader(token))
       .then((response) => {
         if (response.status === 200) {
           dispatch(userSucceeded());
