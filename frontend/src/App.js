@@ -17,6 +17,9 @@ const SignUp = React.lazy(() => {
 const Profile = React.lazy(() => {
   return import("./containers/Profile/Profile");
 });
+// const MyThings = React.lazy(() => {
+//   return import("./containers/MyThings/MyThings");
+// });
 
 const App = (props) => {
   const dispatch = useDispatch();
@@ -43,6 +46,7 @@ const App = (props) => {
     routes = (
       <Switch>
         <Route path="/profile" render={(props) => <Profile {...props} />} />
+        {/* <Route path="/myThings" render={(props) => <MyThings {...props} />} /> */}
         <Route path="/logout" component={Logout} />
         {/* <Route path="/" exact component={Home} /> */}
         <Redirect to="/" />
